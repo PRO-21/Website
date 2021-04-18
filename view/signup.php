@@ -68,7 +68,7 @@ if (isset($_POST['signUp'])) {
     } else {
         echo
             '<div class="alert alert-danger" role="alert">
-                Error. Please contact us for more information.
+                Error. Something went wrong. Please try again.
             </div>';
     }
 
