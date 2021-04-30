@@ -24,18 +24,42 @@
 
 <body>
 <?php
+include_once ("../utils/jwtUtils.php");
+
+if (isset($_COOKIE[loginCookieName])) { // Si l'utilisateur a une session ouverte, cette page est bloquée
+    header('Location: /protest/index.php');
+}
+
 include ("../struct/header.php");
 
-// Création d'un compte utilisateur
+
+// *** Récupération des pays ***
+$url = 'https://pro.simeunovic.ch:8022/protest/api/country';
+$ch = curl_init($url);
+
+// Paramètres
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json
+                                                       Location: /country'));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$result = json_decode(curl_exec($ch), true);
+curl_close($ch);
+
+
+// *** Création d'un compte utilisateur ***
 if (isset($_POST['signUp'])) {
     // Récupération des data
     $nom = $_POST['firstName'];
     $prenom = $_POST['lastName'];
     $email = $_POST['email'];
+    $country = $_POST['countrySelect'];
     $ville = $_POST['ville'];
     $npa = $_POST['npa'];
     $adresse = $_POST['adresse'];
     $motDepasse = $_POST['password'];
+
+    // Récupération de l'id pays depuis la variable country
+    $bracketPos = strpos($country, "[");
+    $idCountry = substr($country, $bracketPos + 1, -1);
 
     // Création ressource cURL
     $url = 'https://pro.simeunovic.ch:8022/protest/api/user';
@@ -48,7 +72,8 @@ if (isset($_POST['signUp'])) {
         'adresse' => "$adresse",
         'npa' => "$npa",
         'email' => "$email",
-        'motDePasse' => "$motDepasse"
+        'motDePasse' => "$motDepasse",
+        'idPersonnePays' => "$idCountry"
     );
     $payload = json_encode($data);
 
@@ -68,14 +93,15 @@ if (isset($_POST['signUp'])) {
     } else {
         echo
             '<div class="alert alert-danger" role="alert">
-                Error. Something went wrong. Please try again.
+                Error. ' . $result['status']['message'] . '
             </div>';
     }
 
-
-
 }
 ?>
+
+
+
 <form method="POST" action="" class="needs-validation">
     <div class="justify-content-center container">
         <div class="form-group col-sm-3">
@@ -94,6 +120,18 @@ if (isset($_POST['signUp'])) {
         <div class="form-group col-sm-3">
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group col-sm-3">
+            <label for="countrySelect">Country</label>
+            <select class="form-control" id="countrySelect" name="countrySelect">
+                <?php
+                foreach($result['data'] as $pays){
+                    echo " 
+                        <option>" .  $pays['nomPays'] . " [" . $pays['idPays'] . "]</option>"
+                    ;
+                }
+                ?>
+            </select>
         </div>
         <div class="form-group col-sm-3">
             <label for="ville">City</label>
