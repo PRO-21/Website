@@ -26,8 +26,11 @@
 
 <?php
 include("struct/header.php");
+include_once ("utils/jwtUtils.php");
 
-// Gestion de la connexion
+
+
+// *** Gestion de la connexion d'un utilisateur ***
 if (isset($_POST['signIn'])) {
     // Récupération des data
     $email = $_POST['email'];
@@ -54,33 +57,46 @@ if (isset($_POST['signIn'])) {
     curl_close($ch);
 
     if ($result['status']['code'] != 200) {
-        header("Location: index.php?loginError=true");
+        header("Location: index.php?loginError");
     } else {
-        echo 'Bienvenue';
+        // Application du cookie côté utilisateur.
+        $token = $result['data']['token'];
+        $tokenDecoded = decodeJWT($token); // Decodage du token JWT reçu de l'API
+        setcookie(loginCookieName, $token, $tokenDecoded->exp, '', 'pro.simeunovic.ch', true, true); // Deux derniers paramètres renforce la sécurité (voir la doc php de setcookie())
+        header('Location: index.php');
     }
 
 }
 
+// *** Gestion du logout ***
+if (isset($_GET['logout'])) {
+    setcookie(loginCookieName, '', 1, '', 'pro.simeunovic.ch', true, true);
+    header('Location: /protest/index.php');
+}
+
+
+// *** Erreur dans la connexion ***
 if (isset($_GET['loginError'])) {
     echo '
         <div class="alert alert-danger text-center" role="alert">
             Error in your login. Please try again.
         </div>
-        
-        <div class="container">        
+
+        <div class="container">
             <div class="row justify-content-center">
                 <div class="col-sm-3 text-center mb-2">
                     <form method="POST" action="index.php" class="needs-validation">';
-                        include "view/login.php";
-    echo '
+        include "view/login.php";
+        echo '
                     </form>
                 </div>
             </div>
         </div>
-    
+
     ';
 }
 ?>
+
 
   <!-- Masthead -->
   <header class="masthead text-white text-center">
