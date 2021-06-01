@@ -47,7 +47,7 @@
 
 <nav class="navbar navbar-light bg-light static-top">
     <div class="container">
-        <a class="navbar-brand" href="/protest/index.php">File authentificator</a>
+        <a class="navbar-brand" href="/index.php">File authentificator</a>
         <?php
         if (isset($_COOKIE['loginSessionToken'])) {
             echo '
@@ -59,14 +59,14 @@
             <?php
             if (isset($_COOKIE['loginSessionToken'])) {
                 echo '
-                    <a class="btn btn-info" href="/protest/utils/login.php?logout">Logout</a>
+                    <a class="btn btn-info" href="/utils/login.php?logout">Logout</a>
                     ';
             } else {
                 echo '
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">
                         Log In
                     </button>
-                    <a class="btn btn-primary" href="/protest/view/signup.php">Sign up</a>
+                    <a class="btn btn-primary" href="/view/signup.php">Sign up</a>
                 ';
             }
             ?>
@@ -86,7 +86,7 @@
 
             if( email != "" && password != "" ){
                 $.ajax({
-                    url: "/protest/utils/login.php",
+                    url: "/utils/login.php",
                     type:'POST',
                     data:{ email : email,
                         password : password },
@@ -94,7 +94,7 @@
                     success:function(response){
                         var msg = "";
                         if(response == 0) {
-                            window.location = "/protest/index.php";
+                            window.location = "/index.php";
                         } else {
                             var result = $("#loginResult");
                             result.addClass("alert-danger");

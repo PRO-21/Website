@@ -8,7 +8,7 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
     $password = $_POST['password'];
 
     // Création ressource cURL
-    $url = 'https://pro.simeunovic.ch:8022/protest/api/auth';
+    $url = 'https://pro.simeunovic.ch:8022/api/auth';
     $ch = curl_init($url);
 
     // Mise en forme des données en json
@@ -44,7 +44,7 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
 // *** Gestion du logout ***
 if (isset($_GET['logout'])) {
     setcookie(loginCookieName, '', 1, '/', 'pro.simeunovic.ch', true, true);
-    header('Location: /protest/index.php');
+    header('Location: /index.php');
 }
 
 

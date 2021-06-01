@@ -50,7 +50,7 @@ include("struct/header.php");
           <form>
             <div class="form-row justify-content-center">
               <div class="col-12 col-md-3">
-                  <a class="btn btn-primary btn-lg" href="./view/test.php" download> Download </a>
+                  <a class="btn btn-primary btn-lg" href="./view/downloads.php" > Download </a>
               </div>
             </div>
           </form>

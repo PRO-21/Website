@@ -27,18 +27,19 @@
 </head>
 
 <body>
+<Title>Account creation</Title>
 <?php
 include_once ("../utils/jwtUtils.php");
 
 if (isset($_COOKIE[loginCookieName])) { // Si l'utilisateur a une session ouverte, cette page est bloquée
-    header('Location: /protest/index.php');
+    header('Location: /index.php');
 }
 
 include ("../struct/header.php");
 
 
 // *** Récupération des pays ***
-$url = 'https://pro.simeunovic.ch:8022/protest/api/country';
+$url = 'https://pro.simeunovic.ch:8022/api/country';
 $ch = curl_init($url);
 
 // Paramètres
@@ -66,7 +67,7 @@ if (isset($_POST['signUp'])) {
     $idCountry = substr($country, $bracketPos + 1, -1);
 
     // Création ressource cURL
-    $url = 'https://pro.simeunovic.ch:8022/protest/api/user';
+    $url = 'https://pro.simeunovic.ch:8022/api/user';
     $ch = curl_init($url);
 
     // Mise en forme des données en json
@@ -105,7 +106,7 @@ if (isset($_POST['signUp'])) {
 ?>
 
 
-
+<h1 align="center">Account creation</h1>
 <form method="POST" action="" class="needs-validation">
     <div class="justify-content-center container">
         <div class="form-group col-sm-3">
@@ -149,7 +150,10 @@ if (isset($_POST['signUp'])) {
             <label for="adresse">Address</label>
             <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Rue de Bourg 5" required>
         </div>
-        <button class="btn btn-primary justify-content-end" type="submit" name="signUp">Sign up</button>
+        <div class="btn col-md-auto">
+            <button class="btn btn-primary align-self-end" type="submit" name="signUp">Sign up</button>
+        </div>
+
     </div>
 
 </form>
