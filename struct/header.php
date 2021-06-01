@@ -23,10 +23,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $siteRootSecure . "/index.php" ?>" class="needs-validation">
-                    <?php
-                       include $siteRoot . "/view/login.php";
-                    ?>
+                <div class="alert" role="alert" id="loginResult">
+                </div>
+                <form class="needs-validation" id="signInForm">
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button class="btn btn-primary justify-content-end" type="submit" id="signIn" name="signIn">Log in</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -35,6 +43,7 @@
         </div>
     </div>
 </div>
+
 
 <nav class="navbar navbar-light bg-light static-top">
     <div class="container">
@@ -50,7 +59,7 @@
             <?php
             if (isset($_COOKIE['loginSessionToken'])) {
                 echo '
-                    <a class="btn btn-info" href="/protest/index.php?logout">Logout</a>
+                    <a class="btn btn-info" href="/protest/utils/login.php?logout">Logout</a>
                     ';
             } else {
                 echo '
@@ -64,3 +73,38 @@
         </div>
     </div>
 </nav>
+
+
+
+<script>
+    $(document).ready(function(){
+        $("#signInForm").submit(function(e){
+            e.preventDefault(); // Prévient submit du form par défaut de HTML
+
+            var email = $("#email").val().trim();
+            var password = $("#password").val().trim();
+
+            if( email != "" && password != "" ){
+                $.ajax({
+                    url: "/protest/utils/login.php",
+                    type:'POST',
+                    data:{ email : email,
+                        password : password },
+
+                    success:function(response){
+                        var msg = "";
+                        if(response == 0) {
+                            window.location = "/protest/index.php";
+                        } else {
+                            var result = $("#loginResult");
+                            result.addClass("alert-danger");
+                            result.html("Error in your login");
+                            $("#password").val('');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+</script>
